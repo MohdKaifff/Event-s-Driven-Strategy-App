@@ -224,7 +224,7 @@ if not run_button:
     h1, h2, h3, h4 = st.columns(4)
     h1.info("**1. Get free API key** from\nalphavantage.co\n Takes Only few seconds")
     h2.info("**2. Enter ticker**\nAny US stock\ne.g. META, SNAP, NFLX")
-    h3.info("**3. Backtest runs**\nReal earnings dates\nBlack-Scholes pricing")
+    h3.info("**3. Backtest runs**\nReal earnings dates\n By using Black-Scholes pricing Model")
     h4.info("**4. Get signal**\nTrade or skip\nnext earnings event")
 
 if run_button:
