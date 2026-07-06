@@ -1,3 +1,4 @@
+
 import streamlit as st
 import yfinance as yf
 import pandas as pd
@@ -17,7 +18,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# ── Core functions ─────────────────────────────────────────────
+# ── Main Core functions usinh black scholes 
 def black_scholes_price(S, K, T, r, sigma, option_type="call"):
     if T <= 0 or sigma <= 0 or S <= 0:
         return 0.0
@@ -184,16 +185,14 @@ st.caption(
 )
 
 col_settings, col_results = st.columns([1, 3])
-
 with col_settings:
-    st.subheader("Settings")
+    st.subheader("Start")
 
     api_key = st.text_input(
         "Alpha Vantage API Key",
         placeholder="Paste your free key here",
         type="password"
     )
-    st.caption("Get free key → alphavantage.co/support/#api-key")
 
     ticker_input = st.text_input(
         "Stock Ticker",
@@ -201,38 +200,36 @@ with col_settings:
         placeholder="e.g. META, SNAP, TSLA"
     ).upper().strip()
 
-    st.markdown("---")
-    st.markdown("**Strategy Parameters**")
+    with st.expander("Advanced strategy settings"):
+        iv_multiplier = st.number_input(
+            "IV Premium Factor",
+            min_value=1.0, max_value=2.5, value=1.5, step=0.1
+        )
 
-    iv_multiplier   = st.number_input(
-        "IV Premium Factor",
-        min_value=1.0, max_value=2.5, value=1.5, step=0.1,
-        help="How much IV exceeds HV before earnings. Default 1.5"
-    )
-    iv_crush_factor = st.number_input(
-        "IV Crush Factor",
-        min_value=0.5, max_value=1.2, value=0.9, step=0.1,
-        help="How much IV drops after earnings. Default 0.9"
-    )
-    iv_filter       = st.number_input(
-        "Max IV Filter (%)",
-        min_value=50, max_value=150, value=75, step=5,
-        help="Skip trades where estimated IV exceeds this. Default 75"
-    )
-    contract_days   = st.number_input(
-        "Contract Days to Expiry",
-        min_value=7, max_value=30, value=14, step=1,
-        help="How many days to expiry when you buy options. Default 14"
-    )
-    sl_pct_input    = st.number_input(
-        "Stop Loss on Losing Leg (%)",
-        min_value=1.0, max_value=5.0, value=2.0, step=0.5,
-        help="Max loss allowed on the losing leg. Default 2%"
-    )
+        iv_crush_factor = st.number_input(
+            "IV Crush Factor",
+            min_value=0.5, max_value=1.2, value=0.9, step=0.1
+        )
+
+        iv_filter = st.number_input(
+            "Max IV Filter (%)",
+            min_value=50, max_value=150, value=75, step=5
+        )
+
+        contract_days = st.number_input(
+            "Contract Days to Expiry",
+            min_value=7, max_value=30, value=14, step=1
+        )
+
+        sl_pct_input = st.number_input(
+            "Stop Loss on Losing Leg (%)",
+            min_value=1.0, max_value=5.0, value=2.0, step=0.5
+        )
+
     sl_pct = sl_pct_input / 100
 
     run_button = st.button(
-        "▶  Run Analysis",
+        "Run Analysis",
         use_container_width=True,
         type="primary"
     )
