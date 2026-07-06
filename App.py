@@ -72,17 +72,25 @@ def fetch_earnings_dates(ticker, api_key):
 def load_price_data(ticker):
     try:
         df = yf.Ticker(ticker).history(period="5y")
-        if len(df) < 100:
+
+        if df.empty or len(df) < 100:
             return None
-        df.index = df.index.tz_convert(None)
+
+        df.index = pd.to_datetime(df.index)
+
+        if df.index.tz is not None:
+            df.index = df.index.tz_convert(None)
+
         df.index = pd.Index([
             datetime.date(d.year, d.month, d.day)
             for d in df.index
         ])
-        return df
-    except:
-        return None
 
+        return df
+
+    except Exception as e:
+        st.error(f"Price data error: {e}")
+        return None
 def run_backtest(earnings_list, df, iv_mult, iv_crush,
                  iv_max, contract_days, sl_pct):
     trading_days = list(df.index)
