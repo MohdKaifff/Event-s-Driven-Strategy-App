@@ -58,7 +58,7 @@ def fetch_earnings_dates(ticker, api_key):
         resp = requests.get(url, timeout=20)
         data = resp.json()
         if "quarterlyEarnings" not in data:
-            return None, f"API error: {list(data.keys())}"
+            return None, f"API error: {data}"
         earnings = []
         for item in data["quarterlyEarnings"][:16]:
             d = item.get("reportedDate")
